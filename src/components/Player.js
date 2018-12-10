@@ -1,30 +1,71 @@
-import React, { Component } from 'react';
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button'
+import { Grid, Col, Row } from 'react-flexbox-grid';
 
-class Player extends Component {
-    render() {
-        return (
-            < div >
-                <img src={this.props.data.avatar_url} alt="" width="100px"></img>
-                <h3>{this.props.data.name}</h3>
-                <h4>{this.props.data.location}</h4>
-                <p>@{this.props.data.login}</p>
-                <p>#{this.props.data.id}</p>
-                {
-                    this.props.data.email &&
-                    <p>{this.props.data.email} </p>
-                }
-                <p>Followers: {this.props.data.followers}</p>
-                <p>Following: {this.props.data.following}</p>
-                <p>Public Repos: {this.props.data.public_repos}</p>
+const avatarStyle = {
+   width: "100px",
+   margin: "20px"
+  };
 
-            </div>
-        );
-    }
+const Player = (props) => {
+
+    return (
+        <div>
+            <Grid>
+                <Row>
+                    <Col xs={6} md={6}>
+                        <TextField
+                            label="GitHub Username"
+                            type="search"
+                            margin="normal"
+                            variant="outlined"
+                            value= {props.login}
+                            onKeyPress={(ev) => {
+                                if (ev.key === 'Enter') {
+                                    props.handleSearchPlayer(ev.target.value, props.id);
+                                    ev.preventDefault();
+                                }
+                            }}
+                        />
+                        <Button variant="contained" size="small" color="secondary" onClick={() => props.deletePlayer(props.id)}>Delete</Button>
+                    </Col>
+                </Row>                
+                <Row>
+                    <Col xs={12} md={6}>
+            
+                        {props.player &&
+                            <div >
+                                <img style={avatarStyle}
+                                    alt={props.player.name}
+                                    src={props.player.avatar_url}
+                                />
+                                <p>{props.player.name}</p>
+                                <p>{props.player.location}</p>
+                                <p>@{props.player.login}</p>
+                                <p>#{props.player.id}</p>
+                                {
+                                    props.player.email &&
+                                    <p>{props.player.email} </p>
+                                }
+                                <p>Followers: {props.player.followers}</p>
+                                <p>Following: {props.player.following}</p>
+                                <p>Public Repos: {props.player.public_repos}</p>
+                            </div>}
+                    </Col>
+                </Row>
+            </Grid>
+        </div>
+    );
 }
 
+
 Player.propTypes = {
-    data: PropTypes.object.isRequired,
+    id: PropTypes.number.isRequired,
+    player: PropTypes.array.isRequired,
+    handleSearchPlayer: PropTypes.func.isRequired,
+    deletePlayer: PropTypes.func.isRequired,
 };
 
 export default Player;
